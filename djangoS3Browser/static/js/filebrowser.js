@@ -222,7 +222,7 @@
                         target = 'target="_blank"';
                     }
                     $(".pb-filemng-template-body").append(
-                        '<div class="col-sm-1 pb-filemng-body-folders" onClick="select_file(this);" ondblclick="open_item(this);" ' +
+                        '<div class="pb-filemng-body-folders" onClick="select_file(this);" ondblclick="open_item(this);" ' +
                         'data-toggle="tooltip" ondrop="drop_file(event)" ondragover="allowDrop_file(event)" ondragstart="dragstart_file(event)" ondragend="dragend_file(event)" draggable="true" title="' + files_list[key].text +
                         '" data-url="' + files_list[key].url + '" data-type="' + files_list[key].type + '">' +
                         '<img src="' + files_list[key].icon + '"/></a>' + '<br />' +

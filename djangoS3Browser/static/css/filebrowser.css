@@ -61,20 +61,26 @@
     color: blue;
 }
 
-.pb-filemng-body-folders > img:hover {
-    cursor: pointer;
-}
+.pb-filemng-template-body{
+    display: flex;
+    flex-wrap: wrap;
+  }
 
 .pb-filemng-body-folders > img {
     height: 80px;
     width: auto;
     max-width: 80px;
     margin-bottom: 4px;
+    object-fit: contain;
+    object-position: center;
+    cursor: pointer;
 }
 
 .pb-filemng-body-folders {
+    position: relative;
     text-align: center;
     cursor: move;
+    width: 8em
 }
 
 .pb-filemng-body-folders:hover {
