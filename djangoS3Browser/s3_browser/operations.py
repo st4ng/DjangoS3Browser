@@ -25,6 +25,7 @@ Big Note: for [1:]
 def get_folder_with_items(main_folder, sort_a_z):
     try:
         sort_a_z = True if sort_a_z == "true" else False  # sorted method a to z/ z to a
+        main_folder = main_folder if not main_folder[1:] or main_folder.endswith('/') else f'{main_folder}/'
         result = s3client.list_objects(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=main_folder[1:], Delimiter="/")
         result_files = get_files(main_folder, result.get('Contents'), sort_a_z) if result.get('Contents') else []
         result_folders = get_folders(main_folder, result.get('CommonPrefixes'), sort_a_z) if result.get(
