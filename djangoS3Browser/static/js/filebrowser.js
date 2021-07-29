@@ -80,6 +80,16 @@
         get_files("-");
     });
 
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (settings.type == 'POST' || settings.type == 'PUT' || settings.type == 'DELETE') {
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                    xhr.setRequestHeader("X-CSRFToken", CSRF_TOKEN);
+                }
+            }
+        }
+    });
+
     var selected_file_list = [];
     var copy_selected_file_list = [];
     var sort_a_z_value = true;
