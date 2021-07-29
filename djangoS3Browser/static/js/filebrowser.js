@@ -76,8 +76,18 @@
 
     }(jQuery);
 
-    $(document).ready(function () {
-        get_files("-");
+    function getPathFromParam() {
+        var url = new URL(window.location);
+       return "-" + (url.searchParams.get(PATH_PARAM)?.replace(/\/?$/, '/') ?? "");
+    }
+
+    function getFilesByUrlParam() {
+        get_files(getPathFromParam());
+    }
+
+    $(document).ready(() => {
+        $('#location').attr("data-location", getParentLocation(getPathFromParam()));
+        getFilesByUrlParam()
     });
 
     $.ajaxSetup({
@@ -89,6 +99,18 @@
             }
         }
     });
+
+    window.addEventListener('popstate', getFilesByUrlParam);
+
+    function push_history(path) {
+        var url = new URL(window.location);
+        if (path) {
+            url.searchParams.set(PATH_PARAM, path);
+        } else {
+            url.searchParams.delete(PATH_PARAM);
+        }
+        window.history.pushState({}, '', url);
+    }
 
     var selected_file_list = [];
     var copy_selected_file_list = [];
@@ -182,6 +204,7 @@
         url = d.getAttribute("data-url");
         type = d.getAttribute("data-type");
         if (type === 'folder') {
+            push_history(url)
             get_files("-" + url)
         } else {
             window.open(url, '_blank');
@@ -191,10 +214,7 @@
 
     // back top folder
 
-    function back_folder(d) {
-        var loc = d.getAttribute('data-top_folder');
-        get_files(loc);
-        $('#location').attr("data-location", loc);
+    function getParentLocation(loc) {
         var top_loc = "";
         var loc_array = loc.split('/');
         for (var i = 0; i < loc_array.length - 2; i++) {
@@ -203,7 +223,15 @@
         if (1 > top_loc.length) {
             top_loc = "-"
         }
-        $('#top_folder').attr("data-top_folder", top_loc);
+        return top_loc
+    }
+
+    function back_folder(d) {
+        var loc = d.getAttribute('data-top_folder');
+        push_history(loc.substring(1))
+        get_files(loc);
+        $('#location').attr("data-location", loc);
+        $('#top_folder').attr("data-top_folder", getParentLocation(loc));
     }
 
     //     "fetch the directories within the selected folder"
