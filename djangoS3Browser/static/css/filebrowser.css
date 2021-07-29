@@ -101,7 +101,7 @@
 }
 
 .pb-filemng-paragraphs {
-    width: 100%px;
+    width: 100%;
     height: 30px;
     overflow: hidden;
     text-overflow: ellipsis;

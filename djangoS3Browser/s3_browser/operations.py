@@ -117,11 +117,18 @@ def rename(location, file, new_name):
     try:
         if file[-1] == "/" and new_name[-1] != "/":  # if file format exception
             new_name += "/"
+        if file == new_name:
+            return file
+
+        old_key = location[1:] + file
+        new_key = location[1:] + new_name
+
         s3client.copy_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, ACL="public-read",
-                             CopySource={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': location[1:] + file},
-                             Key=new_name)
-        s3client.delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=location[1:] + file)
-        return location[1:] + new_name
+                             CopySource={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': old_key},
+                             Key=new_key)
+        s3client.delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=old_key)
+        
+        return new_name
     except Exception as e:
         print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
         raise Exception('Rename Failed! ', e)
