@@ -38,11 +38,18 @@ def get_folder_with_items(main_folder, sort_a_z):
 def get_files(main_folder, result, sort_a_z):
     try:
         files_list = []
+        base_path = (
+            settings.AWS_S3_CUSTOM_DOMAIN
+            if settings.AWS_S3_CUSTOM_DOMAIN
+            else "s3-{0}.amazonaws.com/{1}".format(
+                bucket_location["LocationConstraint"],
+                settings.AWS_STORAGE_BUCKET_NAME,
+            )
+        )
         for obj in result:
             # main_folder[1:] exp; -folder1/folder2 => delete "-"
             if main_folder[1:] != obj.get('Key'):  # if obj is not folder item
-                object_url = "https://s3-{0}.amazonaws.com/{1}/{2}".format(
-                    bucket_location['LocationConstraint'], settings.AWS_STORAGE_BUCKET_NAME, obj.get('Key'))
+                object_url = "https://{0}/{1}".format(base_path, obj.get('Key'))
                 # for template file icon
                 icon_list = [
                     'ai.png', 'audition.png', 'avi.png', 'bridge.png', 'css.png', 'csv.png', 'dbf.png', 'doc.png',
