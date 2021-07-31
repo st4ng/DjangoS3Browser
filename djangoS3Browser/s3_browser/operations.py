@@ -41,9 +41,9 @@ def get_files(main_folder, result, sort_a_z):
         base_path = (
             settings.AWS_S3_CUSTOM_DOMAIN
             if settings.AWS_S3_CUSTOM_DOMAIN
-            else "s3-{0}.amazonaws.com/{1}".format(
-                bucket_location["LocationConstraint"],
+            else "{0}.s3.{1}.amazonaws.com".format(
                 settings.AWS_STORAGE_BUCKET_NAME,
+                bucket_location["LocationConstraint"],
             )
         )
         for obj in result:
