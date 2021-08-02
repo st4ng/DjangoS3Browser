@@ -98,7 +98,13 @@ def upload_file(location, file):
         content_type, encoding = mimetypes.guess_type(file.name)
 
         if content_type:
-            params['ContentType'] = content_type                
+            params['ContentType'] = content_type
+            
+            _type = content_type.split('/')[0] 
+            if _type == 'image':
+                width, height = get_image_dimensions(file)
+                params["Metadata"] = {"width": str(width), "height": str(height)}
+                
         if encoding:
             params['ContentEncoding'] = encoding
 
