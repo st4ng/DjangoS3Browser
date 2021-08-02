@@ -1,12 +1,13 @@
 import boto3
 import sys
-
+import mimetypes
 try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
 
 from django.conf import settings
+from django.core.files.images import get_image_dimensions
 
 s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                     aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
@@ -93,8 +94,16 @@ def get_folders(main_folder, result, sort_a_z):
 
 def upload_file(location, file):
     try:
+        params = {}
+        content_type, encoding = mimetypes.guess_type(file.name)
+
+        if content_type:
+            params['ContentType'] = content_type                
+        if encoding:
+            params['ContentEncoding'] = encoding
+
         s3client.put_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=location[1:] + file.name, Body=file,
-                            ACL="public-read")
+                            ACL="public-read", **params)
     except Exception as e:
         print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
         raise Exception('Upload Failed! ', e)
